@@ -11,6 +11,7 @@ class BaseCirlularSlider extends StatelessWidget {
     this.dragEnable = true,
     this.trackWidth = 22,
     this.animationEnable = true,
+    this.useDot = true,
     this.size,
     this.min,
     this.max,
@@ -23,12 +24,13 @@ class BaseCirlularSlider extends StatelessWidget {
   final bool dragEnable;
   final double trackWidth;
   final bool animationEnable;
+  final bool useDot;
   double? size;
   double? min;
   double? max;
   double? value;
   Function(double value)? onEnd;
-  Widget Function(double)? innerWidget;
+  Widget Function(double value)? innerWidget;
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +51,7 @@ class BaseCirlularSlider extends StatelessWidget {
               Colors.transparent,
               Colors.white,
             ],
+            dotColor: useDot ? Colors.white : Colors.transparent,
             trackGradientStartAngle: 0,
             trackGradientEndAngle: 180,
             hideShadow: true,

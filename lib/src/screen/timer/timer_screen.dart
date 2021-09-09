@@ -29,20 +29,31 @@ class TimerScreen extends GetView<TimerController> {
                   trackWidth: 35,
                   animationEnable: false,
                   dragEnable: false,
+                  useDot: false,
                   progressColor:
                       controller.isActive ? Colors.green : Colors.red,
                   min: 0,
                   max: controller.maxValue,
                   value: controller.count.value,
+                  innerWidget: (value) {
+                    return Center(
+                        child: Text(
+                      "${controller.count.value.ceil()} 秒",
+                      style: TextStyle(
+                        fontSize: 25.sp,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ));
+                  },
                 ),
               ),
-              Text(
-                "Do It !!",
-                style: TextStyle(
-                  fontSize: 35.sp,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
+              Obx(() => Text(
+                    controller.intervalText.value,
+                    style: TextStyle(
+                      fontSize: 30.sp,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  )),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
@@ -61,7 +72,7 @@ class TimerScreen extends GetView<TimerController> {
                     mainColor: Colors.redAccent,
                     text: "Finish",
                     onPress: () {
-                      controller.backRoot();
+                      controller.confirmFinish();
                     },
                   ),
                 ],

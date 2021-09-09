@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:get/get.dart';
 import 'package:getx_timer/src/screen/home/home_sceen.dart';
+import 'package:getx_timer/src/screen/widgets/custom_dialog.dart';
 import 'package:getx_timer/src/service/setting_service.dart';
 
 enum TimerState {
@@ -49,6 +50,18 @@ class TimerController extends GetxController {
     return SettingService.to.setCount;
   }
 
+  bool get isLastSet {
+    return currentSet.value == maxCount;
+  }
+
+  RxString get intervalText {
+    if (isActive) {
+      return "Do It !!".obs;
+    } else {
+      return "Take a break".obs;
+    }
+  }
+
   late Timer _intevalTimer;
 
   final RxDouble count = RxDouble(0);
@@ -78,12 +91,13 @@ class TimerController extends GetxController {
 
   void startCountDown() {
     _intevalTimer = Timer.periodic(
-      Duration(seconds: 1),
+      Duration(milliseconds: 100),
       (timer) {
-        if (count > 1) {
-          count.value--;
-        } else if (count.value == 10) {
+        if (count.value == 10) {
           print("10");
+          count.value -= 0.1;
+        } else if (count > 0.3) {
+          count.value -= 0.1;
         } else {
           _intevalTimer.cancel();
           finishTimer();
@@ -93,14 +107,19 @@ class TimerController extends GetxController {
   }
 
   void finishTimer() {
-    if (!isActive) currentSet.value++;
+    if (isLastSet) {
+      currentSet.value++;
+    } else if (!isActive) currentSet.value++;
 
     if (currentSet.value <= maxCount) {
       toggleState();
       setCount();
+
+      /// finish sound
       startCountDown();
     } else {
-      Get.offAll(HomeScreen());
+      /// show AD
+      backRoot();
     }
   }
 
@@ -115,6 +134,20 @@ class TimerController extends GetxController {
   void backRoot() {
     _intevalTimer.cancel();
     Get.offAll(HomeScreen());
+  }
+
+  void confirmFinish() async {
+    _intevalTimer.cancel();
+    await Get.dialog(CustomDialog(
+      title: "確認",
+      descripon: "終了しても宜しいでしょうか？",
+      mainColor: Colors.redAccent,
+      onSuceed: backRoot,
+      onCancel: () {
+        startCountDown();
+      },
+      icon: Icons.cancel,
+    ));
   }
 
   void pause() {
