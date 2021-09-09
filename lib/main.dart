@@ -1,15 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/instance_manager.dart';
 import 'package:get/route_manager.dart';
-import 'package:getx_timer/src/screen/home/home_controller.dart';
 import 'package:getx_timer/src/screen/home/home_sceen.dart';
 import 'package:getx_timer/src/screen/prepare/prepare_controller.dart';
 import 'package:getx_timer/src/screen/prepare/prepare_screen.dart';
+import 'package:getx_timer/src/screen/set_count/set_count_screen.dart';
 import 'package:getx_timer/src/screen/timer/timer_controller.dart';
 import 'package:getx_timer/src/screen/timer/timer_screen.dart';
+import 'package:getx_timer/src/service/setting_service.dart';
 import 'package:sizer/sizer.dart';
 
-void main() {
+import 'src/service/database_service.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
+  await Get.put(DatabaseService()).initStorage();
+
   runApp(MyApp());
 }
 
@@ -40,7 +49,13 @@ class MyApp extends StatelessWidget {
             GetPage(
               name: TimerScreen.routeName,
               page: () => TimerScreen(),
-            )
+              binding: TimerBinding(),
+            ),
+            GetPage(
+              name: SetCountScreen.routeName,
+              page: () => SetCountScreen(),
+              fullscreenDialog: true,
+            ),
           ],
           initialBinding: InitialBinding(),
           home: HomeScreen(),
@@ -53,8 +68,6 @@ class MyApp extends StatelessWidget {
 class InitialBinding extends Bindings {
   @override
   void dependencies() {
-    Get.put(HomeController());
-    Get.lazyPut(() => PrepareController());
-    Get.lazyPut(() => TimerController());
+    Get.lazyPut(() => SettingService(), fenix: true);
   }
 }

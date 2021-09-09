@@ -11,45 +11,61 @@ class HomeScreen extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
-      body: SafeArea(
-        child: Container(
-          alignment: Alignment.topCenter,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Text("稼働時間"),
-              BaseCirlularSlider(),
-              Text("休憩時間"),
-              BaseCirlularSlider(
-                progressColor: Colors.red,
+        backgroundColor: Colors.black,
+        body: GetBuilder<HomeController>(
+          init: HomeController(),
+          autoRemove: false,
+          builder: (_) {
+            return SafeArea(
+              child: Container(
+                alignment: Alignment.topCenter,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text("稼働時間"),
+                    BaseCirlularSlider(
+                      value: controller.setting.activeTime,
+                      onEnd: (value) {
+                        controller.setting.activeTime = value.ceilToDouble();
+                      },
+                    ),
+                    Text("休憩時間"),
+                    BaseCirlularSlider(
+                      value: controller.setting.intervalTime,
+                      progressColor: Colors.red,
+                      onEnd: (value) {
+                        controller.setting.intervalTime = value.ceilToDouble();
+                      },
+                    ),
+                    CustomGradientButton(
+                      mainColor: Colors.deepPurple,
+                      text: "${controller.setting.setCount} セット",
+                      onPress: () {
+                        controller.setCount();
+                      },
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        CustomGradientButton(
+                          mainColor: Colors.yellow,
+                          text: "Save",
+                          onPress: () {},
+                        ),
+                        CustomGradientButton(
+                          mainColor: Colors.green,
+                          text: "スタート",
+                          onPress: () {
+                            controller.start();
+                          },
+                        ),
+                      ],
+                    )
+                  ],
+                ),
               ),
-              CustomGradientButton(
-                mainColor: Colors.deepPurple,
-                text: "3 セット",
-                onPress: () {},
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  CustomGradientButton(
-                    mainColor: Colors.yellow,
-                    text: "Save",
-                    onPress: () {},
-                  ),
-                  CustomGradientButton(
-                    mainColor: Colors.green,
-                    text: "スタート",
-                    onPress: () {
-                      controller.start();
-                    },
-                  ),
-                ],
-              )
-            ],
-          ),
-        ),
-      ),
-    );
+            );
+          },
+        ));
   }
 }

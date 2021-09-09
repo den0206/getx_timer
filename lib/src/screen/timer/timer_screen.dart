@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:getx_timer/src/screen/home/home_sceen.dart';
 import 'package:getx_timer/src/screen/timer/timer_controller.dart';
 import 'package:getx_timer/src/screen/widgets/base_circle.dart';
 import 'package:getx_timer/src/screen/widgets/custom_button.dart';
@@ -20,15 +19,21 @@ class TimerScreen extends GetView<TimerController> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Text(
-                "セット数 3 /3",
-                style: TextStyle(fontSize: 15.sp),
-              ),
+              Obx(() => Text(
+                    controller.setCountString(),
+                    style: TextStyle(fontSize: 15.sp),
+                  )),
               Obx(
                 () => BaseCirlularSlider(
                   size: 70.w,
+                  trackWidth: 35,
+                  animationEnable: false,
+                  dragEnable: false,
                   progressColor:
                       controller.isActive ? Colors.green : Colors.red,
+                  min: 0,
+                  max: controller.maxValue,
+                  value: controller.count.value,
                 ),
               ),
               Text(
@@ -41,15 +46,19 @@ class TimerScreen extends GetView<TimerController> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  CustomGradientButton(
-                    mainColor: Colors.yellow,
-                    text: "Pause",
-                    onPress: () {
-                      controller.toggleState();
-                    },
+                  Obx(
+                    () => CustomGradientButton(
+                      mainColor: controller.isPause.value
+                          ? Colors.blueAccent
+                          : Colors.green,
+                      text: controller.isPause.value ? "Restart" : "Pause",
+                      onPress: () {
+                        controller.pause();
+                      },
+                    ),
                   ),
                   CustomGradientButton(
-                    mainColor: Colors.blueAccent,
+                    mainColor: Colors.redAccent,
                     text: "Finish",
                     onPress: () {
                       controller.backRoot();

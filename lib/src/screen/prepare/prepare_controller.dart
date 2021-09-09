@@ -35,11 +35,9 @@ class PrepareController extends GetxController {
       (timer) {
         if (count > 1) {
           count--;
-        } else if (count.value == 1) {
-          count--;
-          Get.toNamed(TimerScreen.routeName);
         } else {
           _timer.cancel();
+          Get.toNamed(TimerScreen.routeName);
         }
       },
     );

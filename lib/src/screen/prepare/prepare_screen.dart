@@ -11,14 +11,18 @@ class PrepareScreen extends GetView<PrepareController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
-      body: Center(
-        child: Obx(
-          () => Text(
-            controller.count.toString(),
-            style: TextStyle(fontSize: 100.sp),
+      body: Stack(
+        children: [
+          Center(
+            child: Obx(
+              () => Text(
+                controller.count.toString(),
+                style: TextStyle(fontSize: 100.sp, fontWeight: FontWeight.w700),
+              ),
+            ),
           ),
-        ),
+          Positioned(left: 0, top: 0, right: 0, child: AppBar())
+        ],
       ),
     );
   }
