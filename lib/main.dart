@@ -8,6 +8,7 @@ import 'package:getx_timer/src/screen/prepare/prepare_screen.dart';
 import 'package:getx_timer/src/screen/set_count/set_count_screen.dart';
 import 'package:getx_timer/src/screen/timer/timer_controller.dart';
 import 'package:getx_timer/src/screen/timer/timer_screen.dart';
+import 'package:getx_timer/src/service/audio_managet.dart';
 import 'package:getx_timer/src/service/setting_service.dart';
 import 'package:sizer/sizer.dart';
 
@@ -16,6 +17,7 @@ import 'src/service/database_service.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
 
   await Get.put(DatabaseService()).initStorage();
 
@@ -36,8 +38,8 @@ class MyApp extends StatelessWidget {
             ),
             scaffoldBackgroundColor: Colors.black,
             textTheme: Theme.of(context).textTheme.apply(
-                  bodyColor: Colors.white,
-                  displayColor: Colors.white,
+                  bodyColor: Colors.white.withOpacity(0.7),
+                  displayColor: Colors.white.withOpacity(0.7),
                 ),
           ),
           getPages: [
@@ -68,6 +70,7 @@ class MyApp extends StatelessWidget {
 class InitialBinding extends Bindings {
   @override
   void dependencies() {
+    Get.put(AudioManager());
     Get.lazyPut(() => SettingService(), fenix: true);
   }
 }

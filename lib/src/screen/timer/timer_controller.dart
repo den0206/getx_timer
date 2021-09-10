@@ -5,6 +5,7 @@ import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:get/get.dart';
 import 'package:getx_timer/src/screen/home/home_sceen.dart';
 import 'package:getx_timer/src/screen/widgets/custom_dialog.dart';
+import 'package:getx_timer/src/service/audio_managet.dart';
 import 'package:getx_timer/src/service/setting_service.dart';
 
 enum TimerState {
@@ -31,11 +32,13 @@ class TimerBinding extends Bindings {
 }
 
 class TimerController extends GetxController {
-  final Rx<TimerState> currentState = TimerState.active.obs;
+  final Rx<TimerState> timerState = TimerState.active.obs;
   final setting = SettingService.to;
 
+  final _audio = AudioManager.to;
+
   bool get isActive {
-    return currentState.value == TimerState.active;
+    return timerState.value == TimerState.active;
   }
 
   double get maxValue {
@@ -78,6 +81,7 @@ class TimerController extends GetxController {
   @override
   void onClose() {
     _intevalTimer.cancel();
+    _audio.stopAudio();
     super.onClose();
   }
 
@@ -91,16 +95,26 @@ class TimerController extends GetxController {
 
   void startCountDown() {
     _intevalTimer = Timer.periodic(
-      Duration(milliseconds: 100),
-      (timer) {
-        if (count.value == 10) {
-          print("10");
-          count.value -= 0.1;
-        } else if (count > 0.3) {
-          count.value -= 0.1;
-        } else {
-          _intevalTimer.cancel();
-          finishTimer();
+      Duration(seconds: 1),
+      (timer) async {
+        switch (count.round()) {
+          case 11:
+            if (timerState.value == TimerState.active)
+              await _audio.playSound("boxing2.mp3");
+            count.value -= 1;
+            break;
+
+          case 4:
+            await _audio.playSound("start-sound.mp3");
+            count.value -= 1;
+            break;
+          case 1:
+            _intevalTimer.cancel();
+            finishTimer();
+            break;
+
+          default:
+            count.value -= 1;
         }
       },
     );
@@ -125,9 +139,9 @@ class TimerController extends GetxController {
 
   void toggleState() {
     if (isActive) {
-      currentState.value = TimerState.interval;
+      timerState.value = TimerState.interval;
     } else {
-      currentState.value = TimerState.active;
+      timerState.value = TimerState.active;
     }
   }
 
@@ -137,6 +151,7 @@ class TimerController extends GetxController {
   }
 
   void confirmFinish() async {
+    _audio.stopAudio();
     _intevalTimer.cancel();
     await Get.dialog(CustomDialog(
       title: "確認",
@@ -151,6 +166,7 @@ class TimerController extends GetxController {
   }
 
   void pause() {
+    _audio.stopAudio();
     if (_intevalTimer.isActive) {
       isPause.value = true;
       _intevalTimer.cancel();
@@ -162,5 +178,16 @@ class TimerController extends GetxController {
 
   String setCountString() {
     return "$currentSet / $maxCount";
+  }
+
+  Color progressColor() {
+    if (isPause.value) {
+      return Colors.blue.withOpacity(0.8);
+    }
+    if (isActive) {
+      return Colors.green.withOpacity(0.7);
+    } else {
+      return Colors.red.withOpacity(0.7);
+    }
   }
 }

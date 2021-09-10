@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:getx_timer/src/screen/prepare/prepare_controller.dart';
+import 'package:getx_timer/src/screen/widgets/backgroung_vide._screen.dart';
 import 'package:sizer/sizer.dart';
 
 class PrepareScreen extends GetView<PrepareController> {
@@ -13,6 +14,7 @@ class PrepareScreen extends GetView<PrepareController> {
     return Scaffold(
       body: Stack(
         children: [
+          BackgroundVideoScreen(),
           Center(
             child: Obx(
               () => Text(
@@ -21,7 +23,14 @@ class PrepareScreen extends GetView<PrepareController> {
               ),
             ),
           ),
-          Positioned(left: 0, top: 0, right: 0, child: AppBar())
+          Positioned(
+              left: 0,
+              top: 0,
+              right: 0,
+              child: AppBar(
+                elevation: 0,
+                brightness: Brightness.dark,
+              ))
         ],
       ),
     );

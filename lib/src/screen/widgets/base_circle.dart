@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:getx_timer/src/utils/hex_color.dart';
 import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 import 'package:sizer/sizer.dart';
 
@@ -12,6 +11,7 @@ class BaseCirlularSlider extends StatelessWidget {
     this.trackWidth = 22,
     this.animationEnable = true,
     this.useDot = true,
+    this.showTrack = true,
     this.size,
     this.min,
     this.max,
@@ -25,6 +25,7 @@ class BaseCirlularSlider extends StatelessWidget {
   final double trackWidth;
   final bool animationEnable;
   final bool useDot;
+  final bool showTrack;
   double? size;
   double? min;
   double? max;
@@ -44,13 +45,17 @@ class BaseCirlularSlider extends StatelessWidget {
       child: SleekCircularSlider(
         appearance: CircularSliderAppearance(
           customWidths: CustomSliderWidths(
-              trackWidth: trackWidth, progressBarWidth: trackWidth + 8),
+            trackWidth: trackWidth,
+            progressBarWidth: trackWidth + 8,
+          ),
           customColors: CustomSliderColors(
             progressBarColor: progressColor,
-            trackColors: [
-              Colors.transparent,
-              Colors.white,
-            ],
+            trackColors: showTrack
+                ? [
+                    Colors.transparent,
+                    Colors.white,
+                  ]
+                : [Colors.transparent, Colors.transparent],
             dotColor: useDot ? Colors.white : Colors.transparent,
             trackGradientStartAngle: 0,
             trackGradientEndAngle: 180,
@@ -58,12 +63,12 @@ class BaseCirlularSlider extends StatelessWidget {
           ),
           infoProperties: InfoProperties(
               bottomLabelStyle: TextStyle(
-                  color: HexColor('#6DA100'),
+                  color: Colors.white,
                   fontSize: 20,
                   fontWeight: FontWeight.w600),
               bottomLabelText: '秒',
               mainLabelStyle: TextStyle(
-                  color: HexColor('#54826D'),
+                  color: Colors.white,
                   fontSize: 30.0,
                   fontWeight: FontWeight.w600),
               modifier: percentageModifier),
