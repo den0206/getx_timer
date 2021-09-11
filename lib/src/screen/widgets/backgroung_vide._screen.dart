@@ -42,6 +42,7 @@ class _BackgroundVideoScreenState extends State<BackgroundVideoScreen> {
   void initState() {
     super.initState();
     _videoPlayerController = VideoPlayerController.asset(getRandomVideo());
+
     _videoPlayerController.initialize().then((_) {
       _videoPlayerController.setLooping(true);
       setState(() {
@@ -54,8 +55,9 @@ class _BackgroundVideoScreenState extends State<BackgroundVideoScreen> {
 
   @override
   void dispose() {
-    super.dispose();
     _videoPlayerController.dispose();
+
+    super.dispose();
   }
 
   @override

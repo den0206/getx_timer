@@ -11,6 +11,7 @@ import 'package:getx_timer/src/screen/timer/timer_controller.dart';
 import 'package:getx_timer/src/screen/timer/timer_screen.dart';
 import 'package:getx_timer/src/service/audio_managet.dart';
 import 'package:getx_timer/src/service/setting_service.dart';
+import 'package:getx_timer/src/utils/get_device_id.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:sizer/sizer.dart';
 
@@ -22,8 +23,22 @@ void main() async {
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
   await FlutterConfig.loadEnvVariables();
-  await MobileAds.instance.initialize();
+
   await Get.put(DatabaseService()).initStorage();
+  await MobileAds.instance
+      .initialize()
+      .then((InitializationStatus status) async {
+    final testId = await GetDeviceId.getDeviceId();
+
+    MobileAds.instance.updateRequestConfiguration(
+      RequestConfiguration(
+        tagForChildDirectedTreatment: TagForChildDirectedTreatment.unspecified,
+        testDeviceIds: <String>[testId],
+      ),
+    );
+
+    print("$testId");
+  });
 
   runApp(MyApp());
 }
