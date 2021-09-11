@@ -5,23 +5,13 @@ import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:get/get.dart';
 import 'package:getx_timer/src/screen/home/home_sceen.dart';
 import 'package:getx_timer/src/screen/widgets/custom_dialog.dart';
+import 'package:getx_timer/src/service/admon_service.dart';
 import 'package:getx_timer/src/service/audio_managet.dart';
 import 'package:getx_timer/src/service/setting_service.dart';
 
 enum TimerState {
   active,
   interval,
-}
-
-extension TimerStateEXT on TimerState {
-  Color get circleColor {
-    switch (this) {
-      case TimerState.active:
-        return Colors.green;
-      case TimerState.interval:
-        return Colors.red;
-    }
-  }
 }
 
 class TimerBinding extends Bindings {
@@ -120,7 +110,7 @@ class TimerController extends GetxController {
     );
   }
 
-  void finishTimer() {
+  void finishTimer() async {
     if (isLastSet) {
       currentSet.value++;
     } else if (!isActive) currentSet.value++;
@@ -132,8 +122,8 @@ class TimerController extends GetxController {
       /// finish sound
       startCountDown();
     } else {
-      /// show AD
-      backRoot();
+      await AdmobInterstialService.to
+          .showInterstialAd(onDismiss: () => backRoot());
     }
   }
 
@@ -147,7 +137,9 @@ class TimerController extends GetxController {
 
   void backRoot() {
     _intevalTimer.cancel();
-    Get.offAll(HomeScreen());
+
+    Get.offAll(() => HomeScreen());
+
   }
 
   void confirmFinish() async {
