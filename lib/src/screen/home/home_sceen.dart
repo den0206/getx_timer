@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:getx_timer/src/screen/home/home_controller.dart';
 import 'package:getx_timer/src/screen/widgets/backgroung_vide._screen.dart';
+import 'package:getx_timer/src/service/admon_service.dart';
 import 'package:sizer/sizer.dart';
 import '../widgets/base_circle.dart';
 import '../widgets/custom_button.dart';
@@ -24,6 +25,7 @@ class HomeScreen extends GetView<HomeController> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
+                      AdmobBannerService.to.myBannerAd,
                       Text(
                         "活動時間",
                         style: TextStyle(fontSize: 16.sp),

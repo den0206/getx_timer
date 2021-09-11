@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_config/flutter_config.dart';
 import 'package:get/instance_manager.dart';
 import 'package:get/route_manager.dart';
 import 'package:getx_timer/src/screen/home/home_sceen.dart';
@@ -10,15 +11,18 @@ import 'package:getx_timer/src/screen/timer/timer_controller.dart';
 import 'package:getx_timer/src/screen/timer/timer_screen.dart';
 import 'package:getx_timer/src/service/audio_managet.dart';
 import 'package:getx_timer/src/service/setting_service.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:sizer/sizer.dart';
 
+import 'src/service/admon_service.dart';
 import 'src/service/database_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
-
+  await FlutterConfig.loadEnvVariables();
+  await MobileAds.instance.initialize();
   await Get.put(DatabaseService()).initStorage();
 
   runApp(MyApp());
@@ -71,6 +75,7 @@ class InitialBinding extends Bindings {
   @override
   void dependencies() {
     Get.put(AudioManager());
+    Get.put(AdmobInterstialService());
     Get.lazyPut(() => SettingService(), fenix: true);
   }
 }

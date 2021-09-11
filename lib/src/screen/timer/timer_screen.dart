@@ -3,8 +3,10 @@ import 'package:getx_timer/src/screen/timer/timer_controller.dart';
 import 'package:getx_timer/src/screen/widgets/backgroung_vide._screen.dart';
 import 'package:getx_timer/src/screen/widgets/base_circle.dart';
 import 'package:getx_timer/src/screen/widgets/custom_button.dart';
+import 'package:getx_timer/src/service/admon_service.dart';
 import 'package:sizer/sizer.dart';
 import 'package:get/get.dart';
+import 'package:wakelock/wakelock.dart';
 
 class TimerScreen extends GetView<TimerController> {
   const TimerScreen({Key? key}) : super(key: key);
@@ -13,6 +15,7 @@ class TimerScreen extends GetView<TimerController> {
 
   @override
   Widget build(BuildContext context) {
+    Wakelock.enabled;
     return Scaffold(
       body: BaseScreen(
         child: SafeArea(
@@ -21,6 +24,7 @@ class TimerScreen extends GetView<TimerController> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
+                AdmobBannerService.to.myBannerAd,
                 Obx(() => Text(
                       controller.setCountString(),
                       style: TextStyle(fontSize: 15.sp),

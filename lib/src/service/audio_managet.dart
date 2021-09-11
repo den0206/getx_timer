@@ -9,7 +9,6 @@ class AudioManager extends GetxService {
   late AudioCache _cache;
 
   @override
-  @override
   void onInit() async {
     super.onInit();
 

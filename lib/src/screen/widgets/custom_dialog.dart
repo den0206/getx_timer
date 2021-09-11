@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:getx_timer/src/service/admon_service.dart';
 import 'package:sizer/sizer.dart';
 
 class CustomDialog extends StatelessWidget {
@@ -51,7 +54,7 @@ class CustomDialog extends StatelessWidget {
                     fontSize: 12.sp,
                   ),
                 ),
-                // if (Platform.isIOS) AdmobBannerService.to.myDialogAd,
+                if (Platform.isIOS) AdmobBannerService.to.myDialogAd,
                 SizedBox(
                   height: 2.h,
                 ),
